@@ -30,7 +30,10 @@ def send_telegram(message):
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    data = request.json
+    if not request.is_json:
+        return {"error": "Request must be JSON"}, 415
+
+    data = request.get_json()
 
     try:
         price = float(data.get("price"))
